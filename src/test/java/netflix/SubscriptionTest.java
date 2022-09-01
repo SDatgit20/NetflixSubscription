@@ -66,6 +66,7 @@ class SubscriptionTest {
         assertThat(subscription.isActive(),is(equalTo(true)));
     }
 
+
     @Test
     void shouldDisplayBillDetailsBeforePaymentViaFakeClass() {
         BillingServiceFake billingServiceFake=new BillingServiceFake();
