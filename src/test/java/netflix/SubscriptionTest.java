@@ -1,5 +1,7 @@
 package netflix;
 
+import Fakes.BillingServiceFake;
+import Fakes.IPaymentGatewayFake;
 import org.junit.jupiter.api.Test;
 import payment.IPaymentGateway;
 import payment.TransactionStatus;
@@ -51,5 +53,28 @@ class SubscriptionTest {
         subscription.activate();
 
         assertThat(subscription.isActive(),is(equalTo(false)));
+    }
+
+    @Test
+    void shouldBeAbleToActivateWhenTransactionIsSuccessViaFakeClass(){
+        BillingServiceFake billingServicefake=new BillingServiceFake();
+        IPaymentGatewayFake iPaymentGatewayfake=new IPaymentGatewayFake();
+        Subscription subscription=new Subscription(1,SubscriptionPlan.MONTHLY,billingServicefake,iPaymentGatewayfake);
+
+        subscription.activate();
+
+        assertThat(subscription.isActive(),is(equalTo(true)));
+    }
+
+    @Test
+    void shouldDisplayBillDetailsBeforePaymentViaFakeClass() {
+        BillingServiceFake billingServiceFake=new BillingServiceFake();
+        IPaymentGateway iPaymentGatewayFake=new IPaymentGatewayFake();
+        Subscription subscription=new Subscription(1,SubscriptionPlan.MONTHLY,billingServiceFake, iPaymentGatewayFake);
+
+        subscription.activate();
+
+        billingServiceFake.billDetails(SubscriptionPlan.MONTHLY.getPrice());
+        assertThat(billingServiceFake.amount,is(equalTo(SubscriptionPlan.MONTHLY.getPrice())));
     }
 }
